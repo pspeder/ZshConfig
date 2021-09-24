@@ -1,0 +1,8 @@
+#!/bin/zsh
+
+local name="$1"
+local cmd="$2"
+shift 2;
+[ "$UID" -ne 0 ] && alias "$name=sudo $cmd $@"
+
+# vim: ft=zsh tw=78 et ts=2 sts=2 sw=2 cc=80

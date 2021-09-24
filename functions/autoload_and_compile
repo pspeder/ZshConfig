@@ -1,0 +1,45 @@
+#!/bin/zsh
+
+autoload_and_compile () {
+  local file="$1"
+  shift
+
+  # Assume no compiled library exists
+  local compile=1
+
+  [[ -f "$file" ]] && {
+    # Compiled file exists, maybe no recompilation
+    compile=0
+
+    # ...unless one of the files in library have been updated
+    for f in "$@"; do
+      [ $file[1] = ':' ] || continue
+
+      [[ "$file" -nt "$ZSH_INSTANCE[FUNCTIONS_DIR]/$f" ]] && {
+        compile=1
+        break
+      }
+    done
+  }
+
+  # Autoload functions
+  printf "Autloading %s... " ${(j., .)@:t} \
+  && autoload -URz "${(@s. .)@:t}" 2>/dev/null \
+  && print 'done.' \
+  || print 'failed!'
+
+  # Compile library, if necessary
+  (( $compile )) && {
+    printf '(Re)compiling %s... ' $file \
+    && zcompile -UMaz "$file" "${(s. .)@:t}" 2>/dev/null \
+    && print 'done.' \
+    || { print 'failed!'; return 1; }
+  }
+  #|| {
+  #  printf - 'All files in `%s` are up to date.' $file
+  #}
+}
+
+autoload_and_compile "$@"
+
+# vim: ft=zsh et tw=78 ts=2 sts=2 sw=2 cc=80 fdm=marker

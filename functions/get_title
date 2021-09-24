@@ -1,0 +1,22 @@
+#!/bin/zsh
+
+get_title () {
+  local a
+  # Escape '%' chars in $1, make nonprintables visible
+  a=${(V)1//\%/\%\%}
+  
+  # Truncate command, and join lines.
+  a=$(print -Pn "%40>...>$a" | tr -d "\n")
+  
+  case "$TERM" in
+    screen|tmux)
+      print -Pn "\ek$a:$3\e\\"      # screen title (in ^A")
+      ;;
+    xterm*|rxvt-*|urxvt-*)
+      print -Pn "\e]2;$2 | $a:$3\a" # plain xterm title
+      ;;
+  esac
+}
+
+get_title "$@"
+# vim: ft=zsh et tw=78 ts=2 sts=2 sw=2 cc=80

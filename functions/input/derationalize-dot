@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+zmodload zsh/zle
+
+function derationalize-dot {
+  if [[ $LBUFFER = *../.. ]]; then
+    zle backward-delete-char
+    zle backward-delete-char
+    zle backward-delete-char
+  else
+    zle backward-delete-char
+  fi
+}
+
+zle -N derationalize-dot
+bindkey "$terminfo[kbs]" derationalize-dot
+bindkey "$terminfo[kdch1]" derationalize-dot
+
+derationalize-dot
+
+# vim: ft=zsh fdm=marker tw=79 cc=80 et ts=2 sts=2 sw=2

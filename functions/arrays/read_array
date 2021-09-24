@@ -1,0 +1,13 @@
+#!/bin/zsh
+
+function read_array () {
+   local array=$1
+   local delim=${2:-$'\0'}
+   local value
+   while IFS= read -r -d $delim value; do
+     array_push $1 $value
+   done
+}
+
+read_array "$@"
+# vim: set ft=zsh sw=2 ts=2 sts=2 tw=78 cc=80

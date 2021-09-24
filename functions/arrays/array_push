@@ -1,0 +1,11 @@
+#! /bin/zsh
+
+function array_push () {
+  local array=$1
+  shift
+  eval $array'=($'$array' $@)'
+}
+
+array_push "$@"
+
+# vim: set ft=zsh sw=2 ts=2 sts=2 tw=78 cc=80

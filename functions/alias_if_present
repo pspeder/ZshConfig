@@ -1,0 +1,23 @@
+#!/bin/zsh
+
+# Can either take the form: `alias_if_present foo -bar`
+# ...to always call `foo` as `foo -bar`
+#
+# Or can be called as: `alias_if_present foo baz -bar`
+# ...to alias `foo` to `baz -bar`.
+#
+# In either case it will check if the command (arg0 of what's being aliased)
+# is a command.
+alias_if_present () {
+  local name cmd
+
+  name="$1"
+  [[ "$1" == "$2" ]] && { cmd=$name; shift; } || cmd="$2"
+  shift
+
+  (( $+commands["$cmd"] )) && alias "$name='$cmd $@'"
+}
+
+alias_if_present "$@"
+
+# vim: ft=zsh tw=78 et ts=2 sts=2 sw=2 cc=80

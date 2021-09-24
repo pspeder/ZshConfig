@@ -1,0 +1,32 @@
+#!/bin/zsh
+
+function check_project {
+  if (( ${+PROJECT_TYPE} ))
+  then
+    (( ${+OLD_PERIOD} )) && PERIOD="$OLD_PERIOD" || unset PERIOD
+    unset PROJECT_TYPE
+  else
+    # detect_project_type
+  fi
+}
+
+function detect_project_type {
+  local -A stats
+
+  TRAPEXIT() {
+    local most_likely="$stats[0]"
+    eval echo $stats
+  }
+  stats=($(github-linguist | awk -v OFS=' ' '{print $2,$1}'))
+}
+
+function identify_project_hook {
+  local integer period_length=1
+  [[ "$OLD_PERIOD" -gt "$period_length" ]] && {
+    export OLD_PERIOD="$PERIOD";
+    export PERIOD="$period_length";
+  }
+}
+add-zsh-hook periodic check_project
+
+# vim: ft=zsh tw=78 et ts=2 sts=2 sw=2 cc=80

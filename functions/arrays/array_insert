@@ -1,0 +1,10 @@
+#! /bin/zsh
+
+function array_insert () {
+  local array=$1
+  local index=$2
+  eval $array'=(${'$array':0:'$index'} ${@:3} ${'$array':'$index'})'
+}
+array_insert
+
+# vim: set ft=zsh sw=2 ts=2 sts=2 tw=78 cc=80

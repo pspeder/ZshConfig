@@ -1,0 +1,17 @@
+#!/bin/zsh
+
+# Determine if shell session connected via SSH
+# From: https://unix.stackexchange.com/questions/9605
+function on_ssh_connection () {
+  
+  if [[ -n "$SSH_CLIENT" || -n "$SSH_TTY" ]]; then
+    (echo ""; exit 127)
+  else
+    case $(ps -o comm= -p $PPID) in
+      sshd|*/sshd) (echo ""; exit 0);;
+      *) (echo ""; exit 127);;
+    esac
+  fi
+}
+
+on_ssh_connection

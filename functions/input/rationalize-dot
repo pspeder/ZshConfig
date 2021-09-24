@@ -1,0 +1,20 @@
+#!/bin/zsh
+
+zmodload zsh/zle
+
+function rationalize-dot {
+  if [[ $LBUFFER = *.. ]]; then
+    LBUFFER+='/..'
+  else
+    LBUFFER+='.'
+  fi
+}
+
+zle -N rationalize-dot
+bindkey '.' rationalize-dot
+# Do not expand dots during incremental search.
+bindkey -M isearch . self-insert 2>/dev/null
+
+rationalize-dot
+
+# vim: ft=zsh fdm=marker tw=79 cc=80 et ts=2 sts=2 sw=2
